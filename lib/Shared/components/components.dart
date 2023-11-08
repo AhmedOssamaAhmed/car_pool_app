@@ -1,4 +1,6 @@
 // import 'package:fluttertoast/fluttertoast.dart';
+
+import 'package:carpoolcustomersversion/Modules/orders/cart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -97,6 +99,53 @@ AppBar defaultappbar(String text) => AppBar(title: appbarText(text),centerTitle:
     color: mainAppColor, // Change this to the desired color
   ),
   backgroundColor: defaultColor,
+);
+
+
+AppBar customAppBar(String text,int cartItemCount) => AppBar(
+  title: appbarText(text),
+  centerTitle: true,
+  iconTheme: IconThemeData(
+    color: mainAppColor, // Change this to the desired color
+  ),
+  backgroundColor: defaultColor,
+  actions: <Widget>[
+    Stack(
+      children: [
+        IconButton(
+          icon: Icon(Icons.shopping_cart),
+          onPressed: () {// Handle cart button click
+          },
+        ),
+        cartItemCount > 0
+            ? Positioned(
+          right: 5,
+          top: 5,
+          child: Container(
+            padding: EdgeInsets.all(2),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.red,
+            ),
+            constraints: BoxConstraints(
+              minWidth: 15,
+              minHeight: 15,
+            ),
+            child: Center(
+              child: Text(
+                cartItemCount.toString(),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                ),
+              ),
+            ),
+          ),
+        )
+            : SizedBox.shrink(),
+      ],
+    ),
+  ],
 );
 
 // logo

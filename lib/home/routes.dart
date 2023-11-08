@@ -1,3 +1,5 @@
+import 'package:carpoolcustomersversion/Modules/orders/cart.dart';
+import 'package:carpoolcustomersversion/Shared/colors/common_colors.dart';
 import 'package:carpoolcustomersversion/Shared/components/components.dart';
 import 'package:flutter/material.dart';
 
@@ -40,18 +42,64 @@ class _routesState extends State<routes> {
     {2:'rejected'},
   ];
   var button_color = Colors.lightGreen;
+  int cartItemCount = 2;
   @override
   Widget build(BuildContext context) {
     String routeStatus;
     return Scaffold(
-      appBar: defaultappbar("Available routes"),
+      appBar: AppBar(
+        title: appbarText("Available Routes"),
+        centerTitle: true,
+        iconTheme: IconThemeData(
+          color: mainAppColor, // Change this to the desired color
+        ),
+        backgroundColor: defaultColor,
+        actions: <Widget>[
+          Stack(
+            children: [
+              IconButton(
+                icon: Icon(Icons.shopping_cart),
+                onPressed: () {
+                  navigateTo(context, cart());
+                },
+              ),
+              cartItemCount > 0
+                  ? Positioned(
+                right: 5,
+                top: 5,
+                child: Container(
+                  padding: EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.red,
+                  ),
+                  constraints: BoxConstraints(
+                    minWidth: 15,
+                    minHeight: 15,
+                  ),
+                  child: Center(
+                    child: Text(
+                      cartItemCount.toString(),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+                  : SizedBox.shrink(),
+            ],
+          ),
+        ],
+      ),
       body: Column(children: [
         Expanded(
           child: ListView.builder(
             itemCount: availble_routes.length,
             itemBuilder: (context, index) => Container(
-              margin: EdgeInsets.all(10),
-              padding: EdgeInsets.all(10),
+              margin: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
@@ -68,7 +116,10 @@ class _routesState extends State<routes> {
                   Row(
                     children: [
                       captionText(availble_routes[index]['driver']),
-                      Spacer(),
+                      const Spacer(),
+                      captionText(availble_routes[index]['price']),
+                      captionText("EGP"),
+                      SizedBox(width: 20,),
                       captionText(availble_routes[index]['date']),
 
                     ]
@@ -78,14 +129,14 @@ class _routesState extends State<routes> {
                       Text(availble_routes[index]['from']),
                       const Icon(Icons.arrow_right),
                       Text(availble_routes[index]['to']),
-                      Spacer(),
+                      const Spacer(),
                       captionText(availble_routes[index]['time'])
                     ],
                   ),
                   Row(
                     children: [
                       Text("${availble_routes[index]['availble_seats'].toString()} Available Seats in ${availble_routes[index]['car']}"),
-                      Spacer(),
+                      const Spacer(),
 
                       Container(width: 80,height: 20,
                         child: FloatingActionButton(
@@ -97,17 +148,17 @@ class _routesState extends State<routes> {
                                 showDialog(context: context,
                                     builder:(context) {
                                       return AlertDialog(
-                                        title: Text("Confirm Removal"),
-                                        content: Text("Are you sure you want to cancel this reservation ?"),
+                                        title: const Text("Confirm Removal"),
+                                        content: const Text("Are you sure you want to cancel this reservation ?"),
                                         actions: [
                                           TextButton(
-                                            child: Text("Cancel"),
+                                            child: const Text("Cancel"),
                                             onPressed: (){
                                               Navigator.of(context).pop();
                                             }
                                           ),
                                           TextButton(
-                                            child: Text("Confirm"),
+                                            child: const Text("Confirm"),
                                             onPressed: ()async{
                                               setState(() {
                                                 my_requests.removeWhere((element) => element.keys.first == availble_routes[index]['id']);
@@ -121,21 +172,21 @@ class _routesState extends State<routes> {
                                       );
                                     }
                                 );
-                              }else {
+                              }else if(status != 'rejected') {
                                 showDialog(context: context,
                                     builder:(context) {
                                       return AlertDialog(
-                                        title: Text("Checkout"),
-                                        content: Text("Are you sure you want to add this ride to your cart ?"),
+                                        title: const Text("Checkout"),
+                                        content: const Text("Are you sure you want to add this ride to your cart ?"),
                                         actions: [
                                           TextButton(
-                                              child: Text("Cancel"),
+                                              child: const Text("Cancel"),
                                               onPressed: (){
                                                 Navigator.of(context).pop();
                                               }
                                           ),
                                           TextButton(
-                                              child: Text("Confirm"),
+                                              child: const Text("Confirm"),
                                               onPressed: ()async{
                                                 setState(() {
                                                   my_requests.add(
@@ -154,13 +205,20 @@ class _routesState extends State<routes> {
                               }
                             });
                           },
-                          child: Text("Reserve"), shape: RoundedRectangleBorder(
+                          shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)
                         ),
                           backgroundColor:  getStatusForRoute(availble_routes[index]['id']) == 'pending' ? Colors.yellow
                               : getStatusForRoute(availble_routes[index]['id']) == 'accepted' ? Colors.blue
                               : getStatusForRoute(availble_routes[index]['id']) == 'rejected' ? Colors.red
                               : Colors.lightGreen,
+                          child:getStatusForRoute(availble_routes[index]['id']) == 'pending'
+                              ? const Text("Pending")
+                              : getStatusForRoute(availble_routes[index]['id']) == 'accepted'
+                              ? const Text("Accepted")
+                              : getStatusForRoute(availble_routes[index]['id']) == 'rejected'
+                              ? const Text("Rejected")
+                              : const Text("Reserve"),
 
                         ),
                       )
