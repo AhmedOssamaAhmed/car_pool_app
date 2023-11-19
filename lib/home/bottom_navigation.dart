@@ -1,3 +1,4 @@
+import 'package:carpoolcustomersversion/Modules/profile/Profile.dart';
 import 'package:carpoolcustomersversion/home/routes.dart';
 import 'package:carpoolcustomersversion/home/history.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ class _bottom_navigationState extends State<bottom_navigation>
 List<Widget> myWidgets=[
   routes(),
   history(),
+  Profile()
 ];
 @override
 Widget build(BuildContext context) {
@@ -52,6 +54,10 @@ Widget build(BuildContext context) {
               label: "History",
               icon: Icon(Icons.history)
           ),
+          BottomNavigationBarItem(
+              label: "Profile",
+              icon: Icon(Icons.history)
+          )
 
         ],
       ),
