@@ -1,3 +1,4 @@
+import 'package:carpoolcustomersversion/home/bottom_navigation.dart';
 import 'package:carpoolcustomersversion/home/routes.dart';
 import 'package:flutter/material.dart';
 import '../../Shared/colors/common_colors.dart';
@@ -53,7 +54,7 @@ class Login extends StatelessWidget {
                               return;
                             }
                             else{
-                              navigateTo(context, routes());
+                              navigateAndFinish(context, bottom_navigation());
                             }
 
                           },
