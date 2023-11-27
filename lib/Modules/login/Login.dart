@@ -1,3 +1,4 @@
+import 'package:carpoolcustomersversion/Modules/login/firebase_signin.dart';
 import 'package:carpoolcustomersversion/home/bottom_navigation.dart';
 import 'package:carpoolcustomersversion/home/routes.dart';
 import 'package:flutter/material.dart';
@@ -44,17 +45,18 @@ class Login extends StatelessWidget {
                       const SizedBox(height: 20,),
                       defaultButton(radius:24 ,
                           fontSize: 12,
-                          function: ()
+                          function: ()async
                           {
-                            String email = emailController.text;
-                            String password = passwordController.text;
+                            String email = emailController.text.trim();
+                            String password = passwordController.text.trim();
                             if(email.isEmpty || password.isEmpty){
                               print('please enter a valid data');
-                              // showToast(text: 'please enter a valid data', error: true);
+                              showToast(text: 'please enter a valid data', error: true);
                               return;
                             }
                             else{
-                              navigateAndFinish(context, bottom_navigation());
+                              buildProgress(text: "loading !!!", context: context,error: false);
+                              await signIn(email, password, context);
                             }
 
                           },

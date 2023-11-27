@@ -4,8 +4,11 @@ import 'package:carpoolcustomersversion/Modules/orders/cart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../colors/common_colors.dart';
 
+SharedPreferences? preferences;
 
 // Button
 Widget defaultButton({
@@ -214,24 +217,26 @@ void buildProgress({
         ),
       ),
     );
+void hidebuildProgress(BuildContext context) {
+  Navigator.of(context, rootNavigator: true).pop();
+}
+void showToast({@required text, @required error,}) => Fluttertoast.showToast(
+  msg: text.toString(),
+  toastLength: Toast.LENGTH_SHORT,
+  gravity: ToastGravity.BOTTOM,
+  timeInSecForIosWeb: 1,
+  backgroundColor: error ? Colors.red : Colors.green,
+  textColor: Colors.white,
+  fontSize: 16.0,
+);
 
-// void showToast({@required text, @required error,}) => Fluttertoast.showToast(
-//   msg: text.toString(),
-//   toastLength: Toast.LENGTH_SHORT,
-//   gravity: ToastGravity.BOTTOM,
-//   timeInSecForIosWeb: 1,
-//   backgroundColor: error ? Colors.red : Colors.green,
-//   textColor: Colors.white,
-//   fontSize: 16.0,
-// );
+Future<void> initPref() async
+{
+  preferences = await SharedPreferences.getInstance();
+}
 
-// Future<void> initPref() async
-// {
-//   preferences = await SharedPreferences.getInstance();
-// }
-//
-// Future<bool> saveToken(String token) => preferences.setString('token', token);
-//
-// Future<bool> removeToken() => preferences.remove('token');
-//
-// String getToken() => preferences.getString('token');
+Future<bool> saveToken(String token) => preferences!.setString('token', token);
+
+Future<bool> removeToken() => preferences!.remove('token');
+
+String? getToken() => preferences!.getString('token');

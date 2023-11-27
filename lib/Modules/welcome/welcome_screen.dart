@@ -40,7 +40,7 @@ class WelcomeScreen extends StatelessWidget {
                 textcolor: defaultColor,
                 function: (){
                 print("sign up");
-                  // navigateTo(context, SignUp());
+                  navigateTo(context, SignUp());
                 },
                 text: 'Sign UP',
               toUpper: false),

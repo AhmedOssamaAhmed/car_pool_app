@@ -1,3 +1,4 @@
+import 'package:carpoolcustomersversion/Modules/register/firebase_signup.dart';
 import 'package:flutter/material.dart';
 import '../../Shared/colors/common_colors.dart';
 import '../../Shared/components/components.dart';
@@ -51,12 +52,12 @@ class SignUp extends StatelessWidget {
                   SizedBox(height: 40,),
                   defaultButton(radius:24 ,
                       fontSize: 12,
-                      function: (){
+                      function: () async {
                         {
-                          String firstName = firstNameController.text;
-                          String lastName = lastNameController.text;
-                          String email = emailController.text;
-                          String password = passwordController.text;
+                          String firstName = firstNameController.text.trim();
+                          String lastName = lastNameController.text.trim();
+                          String email = emailController.text.trim();
+                          String password = passwordController.text.trim();
 
                           if (firstName.isEmpty ||
                               lastName.isEmpty ||
@@ -64,12 +65,27 @@ class SignUp extends StatelessWidget {
                               password.isEmpty )
                           {
                             print("enter valid data");
-                            // showToast(
-                            //   text: 'please enter a valid data',
-                            //   error: true,
-                            // );
+                            showToast(
+                              text: 'please enter a valid data',
+                              error: true,
+                            );
 
                             return;
+                          }else if (!email.endsWith('@eng.asu.edu.eg')) {
+                            print("Please use an email with the domain '@eng.asu.edu.eg'");
+                            showToast(text: "Please use an email with the domain '@eng.asu.edu.eg'",
+                                error: true
+                            );
+                          }else if (password.length < 8 || !RegExp(r'^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9]).*$').hasMatch(password)) {
+                            print("Password must be at least 8 characters long and contain uppercase, lowercase, and numeric characters.");
+                            showToast(text: "Password must be at least 8 characters long and contain uppercase, lowercase, and numeric characters.",
+                                error: true
+                            );
+                          }
+                          else{
+                            await signUp(email, firstName, lastName, password);
+                            navigateAndFinish(context, Login());
+
                           }
                         };
                       },
