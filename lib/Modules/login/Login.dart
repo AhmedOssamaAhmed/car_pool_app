@@ -55,7 +55,7 @@ class Login extends StatelessWidget {
                               return;
                             }
                             else{
-                              buildProgress(text: "loading !!!", context: context,error: false);
+                              buildProgress(text: "loading ...", context: context,error: false);
                               await signIn(email, password, context);
                             }
 

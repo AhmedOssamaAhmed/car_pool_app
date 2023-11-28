@@ -4,6 +4,8 @@ import 'package:carpoolcustomersversion/home/sharedData.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../Modules/login/Login.dart';
+
 class history extends StatefulWidget {
   const history({super.key});
 
@@ -18,6 +20,12 @@ class _historyState extends State<history> {
     final sharedData _sharedData = sharedData();
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.logout),
+          onPressed: () {
+            navigateAndFinish(context, Login());
+          },
+        ),
         title: appbarText("Rides History"),
         centerTitle: true,
         iconTheme: IconThemeData(

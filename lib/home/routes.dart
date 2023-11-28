@@ -4,6 +4,8 @@ import 'package:carpoolcustomersversion/Shared/components/components.dart';
 import 'package:carpoolcustomersversion/home/sharedData.dart';
 import 'package:flutter/material.dart';
 
+import '../Modules/login/Login.dart';
+
 class routes extends StatefulWidget {
   const routes({super.key});
 
@@ -26,6 +28,12 @@ class _routesState extends State<routes> {
     String routeStatus;
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.logout),
+          onPressed: () {
+            navigateAndFinish(context, Login());
+          },
+        ),
         title: appbarText("Available Routes"),
         centerTitle: true,
         iconTheme: IconThemeData(
