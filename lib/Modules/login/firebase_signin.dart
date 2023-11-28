@@ -24,11 +24,13 @@ Future<void> signIn(String email,String password,context) async {
       try{ // FIXME: this is not working
         // initPref();
         SharedPreferences mypref = await SharedPreferences.getInstance();
+        print("*********************************");
+        print(userID);
         mypref.setString('token', userID);
         // saveToken("user logged in");
       }catch(e)
       {
-        print("*********************************");
+        print("fffffffffffffffffffffffffffffffffffffff");
         print(e);
       }
     }

@@ -20,11 +20,8 @@ Future<void> signUp(String email,String firstName,String lastName, String passwo
     User? user = userCredential.user;
     print('User signed up: ${user?.uid}');
 
-    // send email verification
     try {
-      await user!.sendEmailVerification();
-      print("Email verification sent");
-      showToast(text: "Email verification sent", error: false);
+      showToast(text: "Loading ...", error: false);
 
       // Save additional user information to Firestore
       // if(user.emailVerified) {
