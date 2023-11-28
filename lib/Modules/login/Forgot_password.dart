@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../Shared/components/components.dart';
 import 'Login.dart';
+import 'firebase_forget_password.dart';
 
 class RestPassword extends StatelessWidget {
   var emailController = TextEditingController();
@@ -27,6 +28,15 @@ class RestPassword extends StatelessWidget {
                 defaultButton(
                   function: ()
                   {
+                    String email = emailController.text.trim();
+                    if(email.isNotEmpty)
+                    {
+                      resetPassword(email,context);
+                    }
+                    else
+                    {
+                      showToast(text: "Please enter your email", error: true);
+                    }
                     print("out");
                   },
                   text: 'Send reset code',
