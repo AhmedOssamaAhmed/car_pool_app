@@ -1,9 +1,9 @@
-import 'package:carpoolcustomersversion/Modules/register/firebase_signup.dart';
 import 'package:flutter/material.dart';
 import '../../Shared/colors/common_colors.dart';
 import '../../Shared/components/components.dart';
 import '../login/Forgot_password.dart';
 import '../login/Login.dart';
+import 'firebase_signup.dart';
 
 class SignUp extends StatelessWidget {
   var firstNameController = TextEditingController();
