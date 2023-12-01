@@ -1,13 +1,12 @@
-// import 'package:fluttertoast/fluttertoast.dart';
 
-import 'package:carpoolcustomersversion/Modules/orders/cart.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../colors/common_colors.dart';
-
 SharedPreferences? preferences;
 
 // Button
@@ -24,7 +23,7 @@ Widget defaultButton({
   decoration: BoxDecoration(
       color: background,
       borderRadius: BorderRadius.circular(radius),
-    border: Border.all(color: defaultColor, )
+      border: Border.all(color: defaultColor, )
   ),
   child: ElevatedButton(style: ElevatedButton.styleFrom(
     backgroundColor: background,
@@ -33,9 +32,9 @@ Widget defaultButton({
     child: Text(
       toUpper ? text.toUpperCase() : text,
       style: TextStyle(
-        fontSize: fontSize,
-        color: textcolor
-    ),),
+          fontSize: fontSize,
+          color: textcolor
+      ),),
   ),
 );
 
@@ -54,11 +53,11 @@ Widget defaultTextInputField({
     top: 10,
   ),
   decoration: BoxDecoration(
-    boxShadow: [
-      BoxShadow(color: Colors.grey.withOpacity(0.5),
-      spreadRadius: 1,
-      offset: Offset(1,3))
-    ],
+      boxShadow: [
+        BoxShadow(color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 1,
+            offset: Offset(1,3))
+      ],
       color: Colors.white,
       borderRadius: BorderRadius.circular(16)
   ),
@@ -66,13 +65,13 @@ Widget defaultTextInputField({
     children: [
       detailsText(title!),
       TextFormField(
-          controller: controller,
-          obscureText: safe,
-          decoration: InputDecoration(
-            hintStyle: TextStyle(fontSize: 16, color: Colors.grey[300]),
-              border: InputBorder.none,
-              hintText: hint,
-          ),
+        controller: controller,
+        obscureText: safe,
+        decoration: InputDecoration(
+          hintStyle: TextStyle(fontSize: 16, color: Colors.grey[300]),
+          border: InputBorder.none,
+          hintText: hint,
+        ),
         keyboardType: type,
       ),
 
@@ -160,10 +159,10 @@ Widget Logo()=>Container(
 
 // navigate to certain page
 void navigateTo(context, widget) => Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (context) => widget,
-  )
+    context,
+    MaterialPageRoute(
+      builder: (context) => widget,
+    )
 );
 
 //navigate to certain page then exit
@@ -240,3 +239,40 @@ Future<bool> saveToken(String token) => preferences!.setString('token', token);
 Future<bool> removeToken() => preferences!.remove('token');
 
 String? getToken() => preferences!.getString('token');
+
+String formatTimeOfDay(TimeOfDay timeOfDay) {
+  final now = DateTime.now();
+  final dateTime = DateTime(now.year, now.month, now.day, timeOfDay.hour, timeOfDay.minute);
+  final formatter = DateFormat.Hm(); // Use Hm for 24-hour format, or 'jm' for 12-hour format with AM/PM
+  return formatter.format(dateTime);
+}
+String formatDate(DateTime dateTime) {
+  String day = dateTime.day.toString().padLeft(2, '0');
+  String month = dateTime.month.toString().padLeft(2, '0');
+  String year = dateTime.year.toString();
+
+  return '$day/$month/$year';
+}
+
+Future<String?> getUserName(String userId) async {
+  try {
+    DocumentSnapshot userSnapshot = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+
+    if (userSnapshot.exists) {
+      Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
+
+      // Assuming 'name' is a field in the user document
+      String firstName = userData['firstName'];
+      String lastName = userData['lastName'];
+      String userName = firstName + " " + lastName;
+      return userName;
+    } else {
+      // The document with the given user ID does not exist
+      print('User with ID $userId does not exist');
+      return null;
+    }
+  } catch (e) {
+    print('Error retrieving user name: $e');
+    return null;
+  }
+}
