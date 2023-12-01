@@ -38,8 +38,8 @@ Future<void> signUp(String email,String firstName,String lastName, String passwo
           showToast(text: "signed up", error: false);
           navigateAndFinish(context, Login());
         } catch (e) {
-          print("cant save to firestore");
           print('Error: $e');
+          showToast(text: e, error: true);
         }
 
   } catch (e) {
