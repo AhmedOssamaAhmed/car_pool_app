@@ -1,3 +1,4 @@
+import 'package:carpoolcustomersversion/Modules/orders/payment.dart';
 import 'package:carpoolcustomersversion/Shared/components/components.dart';
 import 'package:carpoolcustomersversion/home/sharedData.dart';
 import 'package:flutter/material.dart';
@@ -155,9 +156,20 @@ class _cartState extends State<cart> {
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Text(
-              'Total Price: ${calculateTotalPrice()} EGP',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            child: Row(
+              children: [
+                Text(
+                  'Total Price: ${calculateTotalPrice()} EGP',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const Spacer(),
+              //  button to navigate to pay
+                ElevatedButton(
+                    onPressed: (){
+                      navigateTo(context, pay());
+                    },
+                    child: Text("PAY"))
+              ],
             ),
           ),
         ],
