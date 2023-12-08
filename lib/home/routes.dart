@@ -85,13 +85,13 @@ class _routesState extends State<routes> {
             return Center(child: Text(snapshot.error.toString()));
           }
           else if(snapshot.connectionState == ConnectionState.done){
-            if(_sharedData.availble_routes!.isEmpty){
+            if(_sharedData.available_routes!.isEmpty){
               return Center(child: captionText("No available routes yet"));
             }else{
               return Column(children: [
                 Expanded(
                     child: ListView.builder(
-                        itemCount: _sharedData.availble_routes!.length,
+                        itemCount: _sharedData.available_routes!.length,
                         itemBuilder: (context, index) => Container(
                             margin: const EdgeInsets.all(10),
                             padding: const EdgeInsets.all(10),
@@ -110,34 +110,34 @@ class _routesState extends State<routes> {
                                 children: [
                                   Row(
                                       children: [
-                                        captionText(_sharedData.availble_routes![index]['driver']),
+                                        captionText(_sharedData.available_routes![index]['driver']),
                                         const Spacer(),
-                                        captionText(_sharedData.availble_routes![index]['price'].toString()),
+                                        captionText(_sharedData.available_routes![index]['price'].toString()),
                                         captionText("EGP"),
                                         SizedBox(width: 20,),
-                                        captionText(_sharedData.availble_routes![index]['date']),
+                                        captionText(_sharedData.available_routes![index]['date']),
 
                                       ]
                                   ),
                                   Row(
                                     children: [
-                                      Text(_sharedData.availble_routes![index]['from']),
+                                      Text(_sharedData.available_routes![index]['from']),
                                       const Icon(Icons.arrow_right),
-                                      Text(_sharedData.availble_routes![index]['to']),
+                                      Text(_sharedData.available_routes![index]['to']),
                                       const Spacer(),
-                                      captionText(_sharedData.availble_routes![index]['time'])
+                                      captionText(_sharedData.available_routes![index]['time'])
                                     ],
                                   ),
                                   Row(
                                       children: [
-                                        Text("${_sharedData.availble_routes![index]['seats'].toInt()} Available Seats in ${_sharedData.availble_routes![index]['car']}"),
+                                        Text("${_sharedData.available_routes![index]['seats'].toInt()} Available Seats in ${_sharedData.available_routes![index]['car']}"),
                                         const Spacer(),
 
                                         Container(width: 80,height: 20,
                                           child: FloatingActionButton(
                                             onPressed: ()async{
                                               // setState(() {
-                                                String status = getStatusForRoute(_sharedData.availble_routes![index]['id'],_sharedData.my_requests!);
+                                                String status = getStatusForRoute(_sharedData.available_routes![index]['id'],_sharedData.my_requests!);
                                                 print(status);
                                                 if (status == 'pending' || status == 'accepted') {
                                                   showDialog(context: context,
@@ -156,10 +156,10 @@ class _routesState extends State<routes> {
                                                                 child: const Text("Confirm"),
                                                                 onPressed: ()async{
                                                                   // setState(() { //FIXME: remove from my requests
-                                                                    _sharedData.my_requests!.removeWhere((element) => element.keys.first == _sharedData.availble_routes![index]['id']);
+                                                                    _sharedData.my_requests!.removeWhere((element) => element.keys.first == _sharedData.available_routes![index]['id']);
                                                                     // String? uID = getToken();
                                                                     // _sharedData.deleteRequest(uID!, _sharedData.availble_routes![index]['id']);
-                                                                    _sharedData.removeRequest(_sharedData.availble_routes![index]['id'], context);
+                                                                    _sharedData.removeRequest(_sharedData.available_routes![index]['id'], context);
                                                                     print("removed ");
                                                                     Navigator.of(context).pop();
                                                                     setState(() {
@@ -192,7 +192,7 @@ class _routesState extends State<routes> {
                                                                   // setState(() {
                                                                     // _sharedData.my_requests!.add(
                                                                     //     {_sharedData.availble_routes![index]['id']: 'pending'});
-                                                                    requestRideToFirestore( _sharedData.availble_routes![index]['id'],context);
+                                                                    requestRideToFirestore( _sharedData.available_routes![index]['id'],context);
                                                                     // print(_sharedData.my_requests!);
                                                                     Navigator.of(context).pop();
 
@@ -210,15 +210,15 @@ class _routesState extends State<routes> {
                                             shape: RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(10)
                                             ),
-                                            backgroundColor:  getStatusForRoute(_sharedData.availble_routes![index]['id'],_sharedData.my_requests!) == 'pending' ? Colors.yellow
-                                                : getStatusForRoute(_sharedData.availble_routes![index]['id'],_sharedData.my_requests!) == 'accepted' ? Colors.blue
-                                                : getStatusForRoute(_sharedData.availble_routes![index]['id'],_sharedData.my_requests!) == 'rejected' ? Colors.red
+                                            backgroundColor:  getStatusForRoute(_sharedData.available_routes![index]['id'],_sharedData.my_requests!) == 'pending' ? Colors.yellow
+                                                : getStatusForRoute(_sharedData.available_routes![index]['id'],_sharedData.my_requests!) == 'accepted' ? Colors.blue
+                                                : getStatusForRoute(_sharedData.available_routes![index]['id'],_sharedData.my_requests!) == 'rejected' ? Colors.red
                                                 : Colors.lightGreen,
-                                            child:getStatusForRoute(_sharedData.availble_routes![index]['id'],_sharedData.my_requests!) == 'pending'
+                                            child:getStatusForRoute(_sharedData.available_routes![index]['id'],_sharedData.my_requests!) == 'pending'
                                                 ? const Text("Pending")
-                                                : getStatusForRoute(_sharedData.availble_routes![index]['id'],_sharedData.my_requests!) == 'accepted'
+                                                : getStatusForRoute(_sharedData.available_routes![index]['id'],_sharedData.my_requests!) == 'accepted'
                                                 ? const Text("Accepted")
-                                                : getStatusForRoute(_sharedData.availble_routes![index]['id'],_sharedData.my_requests!) == 'rejected'
+                                                : getStatusForRoute(_sharedData.available_routes![index]['id'],_sharedData.my_requests!) == 'rejected'
                                                 ? const Text("Rejected")
                                                 : const Text("Reserve"),
 

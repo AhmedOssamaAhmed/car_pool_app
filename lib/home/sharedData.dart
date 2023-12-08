@@ -40,7 +40,7 @@ String getStatusForRoute(int id,List<Map> my_requests) {
 
 class sharedData {
   // dummy data
-  List<Map> availble_routes = [
+  List<Map> all_routes = [
     {'driver':'Ahmed','from':'asu','to':'Nasr city','price':'50','car':'GTR','availble_seats':4,'time':'12:00','date':'1/12/2022','id':1},
     {'driver':'Hassan','from':'asu','to':'rehab','price':'80','car':'Skoda','availble_seats':1,'time':'2:00','date':'12/02/2022','id':4},
     {'driver':'Ahmed','from':'asu','to':'Maadi','price':'100','car':'toyota','availble_seats':2,'time':'1:00','date':'12/04/2022','id':3},
@@ -51,23 +51,28 @@ class sharedData {
     {3:'rejected'},
   ];
   List<Map> my_finished_requests = [];
+  List<Map> available_routes = [];
   Future<void> fetchAvailableRoutes() async {
     try {
       String? uID = getToken();
       List<DocumentSnapshot> rides = await getAllRides();
       List<DocumentSnapshot> requests = await getRequestsByCustomer(uID!);
       // Update the available_routes list with the fetched rides
-      availble_routes = rides.map((ride) => ride.data() as Map).toList();
+      all_routes = rides.map((ride) => ride.data() as Map).toList();
+      available_routes = rides.map((ride) => ride.data() as Map).toList();
       my_requests = requests.map((request) => request.data() as Map).toList();
       // update my_finished_requests from my_requests
       for (var request in my_requests) {
         if (request["status"] == 'finished') {
           my_finished_requests.add(request);
+        //  remove the ride with this id from available_routes
+          available_routes.removeWhere((route) => route['id'] == request['id']);
         }
       }
       print("*********************************");
       print(my_requests);
-      print(availble_routes);
+      print(all_routes);
+      print(available_routes);
       print("-------------------------");
       print(my_finished_requests);
       print("*********************************");

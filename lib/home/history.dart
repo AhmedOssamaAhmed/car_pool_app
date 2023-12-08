@@ -44,7 +44,7 @@ class _historyState extends State<history> {
             return Center(child: Text(snapshot.error.toString()));
           }
           else if(snapshot.connectionState == ConnectionState.done){
-            if(_sharedData.availble_routes!.isEmpty){
+            if(_sharedData.all_routes!.isEmpty){
               return Center(child: captionText("No available routes yet"));
             }else{
               return Column(
@@ -58,7 +58,7 @@ class _historyState extends State<history> {
                         String status = _sharedData.my_finished_requests[index]['status'];
                         print(routeId);
                         print(status);
-                        Map? matchingRoute = _sharedData.availble_routes.firstWhere((route) => route['id'] == routeId, orElse: () => {});
+                        Map? matchingRoute = _sharedData.all_routes.firstWhere((route) => route['id'] == routeId, orElse: () => {});
 
                         if (matchingRoute == null) {
                           // Route not found in available_routes
