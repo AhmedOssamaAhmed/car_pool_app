@@ -60,7 +60,7 @@ class _historyState extends State<history> {
                         print(status);
                         Map? matchingRoute = _sharedData.all_routes.firstWhere((route) => route['id'] == routeId, orElse: () => {});
 
-                        if (matchingRoute == null) {
+                        if (matchingRoute.isEmpty) {
                           // Route not found in available_routes
                           return const SizedBox.shrink();
                         }

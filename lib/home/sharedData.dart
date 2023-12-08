@@ -1,5 +1,7 @@
+
 import 'package:carpoolcustomersversion/Shared/components/components.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 Future<List<DocumentSnapshot>> getAllRides() async {
   try {
@@ -52,6 +54,8 @@ class sharedData {
   ];
   List<Map> my_finished_requests = [];
   List<Map> available_routes = [];
+  int cart_item_count = 0;
+  VoidCallback? onCartCountChanged;
   Future<void> fetchAvailableRoutes() async {
     try {
       String? uID = getToken();
@@ -68,8 +72,15 @@ class sharedData {
         //  remove the ride with this id from available_routes
           available_routes.removeWhere((route) => route['id'] == request['id']);
         }
+        if(request["status"] == 'accepted' && request["customer"] == uID){
+          cart_item_count++;
+        }
+      }
+      if(onCartCountChanged!= null) {
+        onCartCountChanged!();
       }
       print("*********************************");
+      print(cart_item_count);
       print(my_requests);
       print(all_routes);
       print(available_routes);

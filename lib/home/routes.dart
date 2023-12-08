@@ -16,9 +16,7 @@ class routes extends StatefulWidget {
 
 class _routesState extends State<routes> {
   final sharedData _sharedData = sharedData();
-
   var button_color = Colors.lightGreen;
-  int cartItemCount = 2;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,11 +42,11 @@ class _routesState extends State<routes> {
                   navigateTo(context, cart());
                 },
               ),
-              cartItemCount > 0
+              _sharedData.cart_item_count > 0 //FIXME NUMBER OF ITEMS NOT SHOWING
                   ? Positioned(
-                right: 5,
-                top: 5,
-                child: Container(
+                    right: 5,
+                    top: 5,
+                    child: Container(
                   padding: EdgeInsets.all(2),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
@@ -60,7 +58,7 @@ class _routesState extends State<routes> {
                   ),
                   child: Center(
                     child: Text(
-                      cartItemCount.toString(),
+                      _sharedData.cart_item_count.toString(),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 12,
@@ -155,17 +153,12 @@ class _routesState extends State<routes> {
                                                             TextButton(
                                                                 child: const Text("Confirm"),
                                                                 onPressed: ()async{
-                                                                  // setState(() { //FIXME: remove from my requests
-                                                                    _sharedData.my_requests!.removeWhere((element) => element.keys.first == _sharedData.available_routes![index]['id']);
-                                                                    // String? uID = getToken();
-                                                                    // _sharedData.deleteRequest(uID!, _sharedData.availble_routes![index]['id']);
                                                                     _sharedData.removeRequest(_sharedData.available_routes![index]['id'], context);
                                                                     print("removed ");
                                                                     Navigator.of(context).pop();
                                                                     setState(() {
 
                                                                     });
-                                                                  // });
 
                                                                 }
                                                             )
