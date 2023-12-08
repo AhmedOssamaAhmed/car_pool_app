@@ -50,11 +50,7 @@ class sharedData {
     {4:'accepted'},
     {3:'rejected'},
   ];
-  List<Map> my_finished_requests = [
-    {1:'finished'},
-    {4:'finished'},
-    {3:'finished'},
-  ];
+  List<Map> my_finished_requests = [];
   Future<void> fetchAvailableRoutes() async {
     try {
       String? uID = getToken();
@@ -63,9 +59,18 @@ class sharedData {
       // Update the available_routes list with the fetched rides
       availble_routes = rides.map((ride) => ride.data() as Map).toList();
       my_requests = requests.map((request) => request.data() as Map).toList();
+      // update my_finished_requests from my_requests
+      for (var request in my_requests) {
+        if (request["status"] == 'finished') {
+          my_finished_requests.add(request);
+        }
+      }
       print("*********************************");
       print(my_requests);
       print(availble_routes);
+      print("-------------------------");
+      print(my_finished_requests);
+      print("*********************************");
     } catch (e) {
       print('Error fetching available routes: $e');
       showToast(text: "Error Fetching rides", error: true);
