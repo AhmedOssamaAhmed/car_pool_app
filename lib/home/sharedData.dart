@@ -65,6 +65,7 @@ class sharedData {
       all_routes = rides.map((ride) => ride.data() as Map).toList();
       available_routes = rides.map((ride) => ride.data() as Map).toList();
       my_requests = requests.map((request) => request.data() as Map).toList();
+      available_routes.removeWhere((map) => map['status'] == 'finished');
       // update my_finished_requests from my_requests
       for (var request in my_requests) {
         if (request["status"] == 'finished') {
