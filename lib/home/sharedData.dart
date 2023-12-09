@@ -1,4 +1,6 @@
 
+import 'dart:async';
+
 import 'package:carpoolcustomersversion/Shared/components/components.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -56,6 +58,9 @@ class sharedData {
   List<Map> available_routes = [];
   int cart_item_count = 0;
   VoidCallback? onCartCountChanged;
+  final StreamController<List<Map<String, dynamic>>> _availableRoutesController = StreamController<List<Map<String, dynamic>>>.broadcast();
+
+
   Future<void> fetchAvailableRoutes() async {
     try {
       String? uID = getToken();
@@ -66,6 +71,7 @@ class sharedData {
       available_routes = rides.map((ride) => ride.data() as Map).toList();
       my_requests = requests.map((request) => request.data() as Map).toList();
       available_routes.removeWhere((map) => map['status'] == 'finished');
+      _availableRoutesController.add(rides.cast<Map<String, dynamic>>());
       // update my_finished_requests from my_requests
       for (var request in my_requests) {
         if (request["status"] == 'finished') {
@@ -93,7 +99,7 @@ class sharedData {
       showToast(text: "Error Fetching rides", error: true);
     }
   }
-  // remove request by id attribute
+
   Future<void> removeRequest(int rideID,context) async {
     try {
       buildProgress(text: "Deleting Request ...", context: context, error: false);

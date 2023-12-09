@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:carpoolcustomersversion/Modules/orders/cart.dart';
 import 'package:carpoolcustomersversion/Shared/colors/common_colors.dart';
 import 'package:carpoolcustomersversion/Shared/components/components.dart';
@@ -17,7 +19,8 @@ class routes extends StatefulWidget {
 class _routesState extends State<routes> {
   final sharedData _sharedData = sharedData();
   var button_color = Colors.lightGreen;
-  @override
+
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -72,8 +75,8 @@ class _routesState extends State<routes> {
           ),
         ],
       ),
-      body: FutureBuilder<void>(
-        future: _sharedData.fetchAvailableRoutes(),
+      body: StreamBuilder<void>(
+        stream: _sharedData.fetchAvailableRoutes().asStream(),
         builder: (context,snapshot){
           if(snapshot.connectionState == ConnectionState.waiting)
           {
@@ -83,13 +86,13 @@ class _routesState extends State<routes> {
             return Center(child: Text(snapshot.error.toString()));
           }
           else if(snapshot.connectionState == ConnectionState.done){
-            if(_sharedData.available_routes!.isEmpty){
+            if(_sharedData.available_routes.isEmpty){
               return Center(child: captionText("No available routes yet"));
             }else{
               return Column(children: [
                 Expanded(
                     child: ListView.builder(
-                        itemCount: _sharedData.available_routes!.length,
+                        itemCount: _sharedData.available_routes.length,
                         itemBuilder: (context, index) => Container(
                             margin: const EdgeInsets.all(10),
                             padding: const EdgeInsets.all(10),
