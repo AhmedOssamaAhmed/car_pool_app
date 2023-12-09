@@ -15,6 +15,7 @@ Future<void> requestRideToFirestore(
       'customer': uID,
       'id': rideID,
       'status': 'pending',
+      'request_id':DateTime.now().millisecondsSinceEpoch * uID!.length
     });
     hidebuildProgress(context);
     showToast(text: "Request sent", error: false);
