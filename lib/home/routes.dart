@@ -19,6 +19,16 @@ class routes extends StatefulWidget {
 class _routesState extends State<routes> {
   final sharedData _sharedData = sharedData();
   var button_color = Colors.lightGreen;
+  Timer? _timer;
+  static const Duration reloadDuration = const Duration(seconds:10);
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(reloadDuration, (Timer timer) {
+      setState(() {});
+    });
+    }
 
 
   Widget build(BuildContext context) {

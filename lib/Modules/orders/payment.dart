@@ -1,3 +1,4 @@
+import 'package:carpoolcustomersversion/home/bottom_navigation.dart';
 import 'package:carpoolcustomersversion/home/routes.dart';
 import 'package:flutter/material.dart';
 
@@ -55,7 +56,7 @@ class _payState extends State<pay> {
                 } else {
                   showToast(text: "Please select a payment method", error: true);
                 }
-                navigateAndFinish(context, routes());
+                navigateAndFinish(context, bottom_navigation());
               },
             ),
           ],

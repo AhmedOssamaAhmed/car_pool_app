@@ -63,6 +63,7 @@ class sharedData {
 
   Future<void> fetchAvailableRoutes() async {
     try {
+      cart_item_count = -1 ;
       String? uID = getToken();
       List<DocumentSnapshot> rides = await getAllRides();
       List<DocumentSnapshot> requests = await getRequestsByCustomer(uID!);
@@ -80,6 +81,7 @@ class sharedData {
           available_routes.removeWhere((route) => route['id'] == request['id']);
         }
         if(request["status"] == 'accepted' && request["customer"] == uID){
+          print("request: ${request}");
           cart_item_count++;
         }
       }
