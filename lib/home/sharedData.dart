@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:carpoolcustomersversion/Shared/components/components.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 Future<List<DocumentSnapshot>> getAllRides() async {
   try {
@@ -43,17 +44,8 @@ String getStatusForRoute(int id,List<Map> my_requests) {
 }
 
 class sharedData {
-  // dummy data
-  List<Map> all_routes = [
-    {'driver':'Ahmed','from':'asu','to':'Nasr city','price':'50','car':'GTR','availble_seats':4,'time':'12:00','date':'1/12/2022','id':1},
-    {'driver':'Hassan','from':'asu','to':'rehab','price':'80','car':'Skoda','availble_seats':1,'time':'2:00','date':'12/02/2022','id':4},
-    {'driver':'Ahmed','from':'asu','to':'Maadi','price':'100','car':'toyota','availble_seats':2,'time':'1:00','date':'12/04/2022','id':3},
-  ];
-  List<Map> my_requests = [
-    {1:'pending'},
-    {4:'accepted'},
-    {3:'rejected'},
-  ];
+  List<Map> all_routes = [];
+  List<Map> my_requests = [];
   List<Map> my_finished_requests = [];
   List<Map> available_routes = [];
   int cart_item_count = 0;
@@ -61,8 +53,9 @@ class sharedData {
   final StreamController<List<Map<String, dynamic>>> _availableRoutesController = StreamController<List<Map<String, dynamic>>>.broadcast();
 
 
-  Future<void> fetchAvailableRoutes() async {
+  Future<void> fetchAvailableRoutes() async { //FIXME don't fetch rides posted by me & don't display rides before timings
     try {
+
       cart_item_count = -1 ;
       String? uID = getToken();
       List<DocumentSnapshot> rides = await getAllRides();
@@ -85,17 +78,46 @@ class sharedData {
           cart_item_count++;
         }
       }
+      // get system timing
+      DateTime current_time = DateTime.now();
+      for(var ride in available_routes){
+        DateTime ride_timing = getDateTimeFromString(ride['date'], ride['time']);
+        if(ride['time'] == '07:30'){
+          ride_timing = ride_timing.subtract(Duration(hours: 9,minutes: 30));
+          if(current_time.isAfter(ride_timing)){
+            updateRide(ride['id'], {'status':'finished'});
+          }
+        }
+        if(ride['time'] == '17:30'){
+          ride_timing = ride_timing.subtract(Duration(hours: 4,minutes: 30));
+          if(current_time.isAfter(ride_timing)){
+            updateRide(ride['id'], {'status':'finished'});
+          }
+        }
+      }
+      // // check if current time is after 10 pm
+      // if (current_time >= TimeOfDay(hour: 10, minute: 00).hour) {
+      //   for (var ride in available_routes){
+      //     if(ride['time'] == '07:30' && ride['date'] == DateTime.now().add(Duration(days: 1)).toString().substring(0,10).toString()){
+      //       updateRide(ride['id'], {'status':'finished'});
+      //     }
+      //   }
+      //   available_routes.removeWhere((route) => route['time'] == '07:30' && route['date'] == DateTime.now().add(Duration(days: 1)).toString().substring(0,10).toString());
+      //
+      // }
+      // // check if current time is after 1 pm same day
+      // if (current_time >= TimeOfDay(hour: 13, minute: 00).hour) {
+      //   for(var ride in available_routes){
+      //     if(ride['date'] == DateTime.now().add(Duration(days: 1)).toString().substring(0,10).toString()){
+      //       updateRide(ride['id'], {'status':'finished'});
+      //     }
+      //   }
+      // }
+      // available_routes.removeWhere((route) => route['time'] == '05:30' && route['date'] == DateTime.now().toString().substring(0,10).toString());
+
       if(onCartCountChanged!= null) {
         onCartCountChanged!();
       }
-      print("*********************************");
-      print(cart_item_count);
-      print(my_requests);
-      print(all_routes);
-      print(available_routes);
-      print("-------------------------");
-      print(my_finished_requests);
-      print("*********************************");
     } catch (e) {
       print('Error fetching available routes: $e');
       showToast(text: "Error Fetching rides", error: true);
@@ -112,7 +134,6 @@ class sharedData {
           element.reference.delete();
         });
       });
-      // await fetchAvailableRoutes();
       hidebuildProgress(context);
       showToast(text: "Request deleted", error: false);
     } catch (e) {
@@ -120,6 +141,28 @@ class sharedData {
       print('Error deleting request: $e');
       showToast(text: "can't delete request", error: true);
     }
+  }
+  Future<void> updateRide(int rideId, Map<String, dynamic> updatedData) async {
+    try {
+      CollectionReference requestsCollection = FirebaseFirestore.instance.collection('rides');
+      QuerySnapshot querySnapshot = await requestsCollection.where('id', isEqualTo: rideId).get();
+      if (querySnapshot.docs.isNotEmpty) {
+        DocumentReference documentReference = requestsCollection.doc(querySnapshot.docs.first.id);
+        await documentReference.update(updatedData);
+
+        print('Document with id $rideId updated successfully.');
+        showToast(text: "status updated", error: false);
+      } else {
+        print('No document found with id $rideId.');
+        showToast(text: "request not found", error: true);
+      }
+    } catch (e) {
+      print('Error updating document: $e');
+      showToast(text: "Failed to update status", error: true);
+    }
+  }
+  DateTime getDateTimeFromString(String date,String time){
+    return DateTime.parse('$date $time');
   }
 
 }
