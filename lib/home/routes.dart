@@ -85,6 +85,13 @@ class _routesState extends State<routes> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: ()async {
+          await selectDateTime(context);
+          setState(() {});
+        },
+        child: Icon(Icons.timer_sharp),
+      ),
       body: StreamBuilder<void>(
         stream: _sharedData.fetchAvailableRoutes().asStream(),
         builder: (context,snapshot){

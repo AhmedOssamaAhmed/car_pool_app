@@ -78,12 +78,12 @@ class sharedData {
           cart_item_count++;
         }
       }
-      // get system timing
-      DateTime current_time = DateTime.now();
+      print("system time is ${current_time}");
       for(var ride in available_routes){
         DateTime ride_timing = getDateTimeFromString(ride['date'], ride['time']);
         if(ride['time'] == '07:30'){
-          ride_timing = ride_timing.subtract(Duration(hours: 9,minutes: 30));
+          ride_timing = ride_timing.subtract(Duration(hours: 9,minutes: 31));
+          print("ride timing is ${ride_timing}");
           if(current_time.isAfter(ride_timing)){
             updateRide(ride['id'], {'status':'finished'});
           }

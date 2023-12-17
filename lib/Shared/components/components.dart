@@ -253,6 +253,33 @@ String formatDate(DateTime dateTime) {
 
   return '$day/$month/$year';
 }
+DateTime current_time = DateTime.now();
+
+Future<void> selectDateTime(BuildContext context) async {
+  final DateTime? picked = await showDatePicker(
+    context: context,
+    initialDate: current_time,
+    firstDate: DateTime(2000),
+    lastDate: DateTime(2101),
+  );
+
+  if (picked != null) {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(current_time),
+    );
+
+    if (pickedTime != null) {
+      current_time = DateTime(
+        picked.year,
+        picked.month,
+        picked.day,
+        pickedTime.hour,
+        pickedTime.minute,
+      );
+    }
+  }
+}
 
 Future<String?> getUserName(String userId) async {
   try {
