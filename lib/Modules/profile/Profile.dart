@@ -1,13 +1,15 @@
 import 'dart:io';
 
-import 'package:carpoolcustomersversion/Modules/login/Login.dart';
-import 'package:carpoolcustomersversion/Modules/profile/firebase_profile.dart';
-import 'package:carpoolcustomersversion/Shared/colors/common_colors.dart';
-import 'package:carpoolcustomersversion/Shared/components/components.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../../Shared/colors/common_colors.dart';
+import '../../Shared/components/components.dart';
+import '../login/Login.dart';
+import 'firebase_profile.dart';
 
 
 class Profile extends StatefulWidget {
@@ -25,6 +27,7 @@ class _ProfileState extends State<Profile> {
   File? _image;
   final picker = ImagePicker();
   firebase_profile _firebase_profile = firebase_profile();
+  var connectivityResult = Connectivity().checkConnectivity();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,16 +46,16 @@ class _ProfileState extends State<Profile> {
         backgroundColor: defaultColor,
       ),
       body: FutureBuilder<void>(
-        future: _firebase_profile.getProfileData(),
-        builder: (context,snapshot){
-          if(snapshot.connectionState == ConnectionState.waiting)
-          {
-            return const Center(child: CircularProgressIndicator());
-          }
-          else if(snapshot.hasError){
-            return Center(child: Text(snapshot.error.toString()));
-          }
-          else if(snapshot.connectionState == ConnectionState.done){
+          future: _firebase_profile.getProfileData(),
+          builder: (context,snapshot){
+            if(snapshot.connectionState == ConnectionState.waiting)
+            {
+              return const Center(child: CircularProgressIndicator());
+            }
+            else if(snapshot.hasError){
+              return Center(child: Text(snapshot.error.toString()));
+            }
+            else if(snapshot.connectionState == ConnectionState.done){
               return SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -85,11 +88,11 @@ class _ProfileState extends State<Profile> {
                   ),
                 ),
               );
+            }
+            else{
+              return const Center(child: CircularProgressIndicator());
+            }
           }
-          else{
-            return const Center(child: CircularProgressIndicator());
-          }
-        }
       ),
     );
   }
@@ -110,7 +113,7 @@ class _ProfileState extends State<Profile> {
           Row(
             children: [
               Text(
-                value!,
+                value ?? '',
                 style: TextStyle(fontSize: 16),
               ),
               IconButton(
@@ -129,10 +132,10 @@ class _ProfileState extends State<Profile> {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
     setState(() {
-    if (pickedFile != null) {
-      _image = File(pickedFile.path);
-      _uploadImageAndUpdateProfile();
-    }
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+        _uploadImageAndUpdateProfile();
+      }
     });
   }
 
@@ -147,23 +150,23 @@ class _ProfileState extends State<Profile> {
           onChanged: (value) {
             switch (field) {
               case "firstName":
-                // _firebase_profile.first_name = value;
+              // _firebase_profile.first_name = value;
                 updated_value = value;
                 break;
               case "lastName":
-                // _firebase_profile.last_name = value;
+              // _firebase_profile.last_name = value;
                 updated_value = value;
                 break;
               case "phone":
-                // _firebase_profile.phone_number = value;
+              // _firebase_profile.phone_number = value;
                 updated_value = value;
                 break;
               case "age":
-                // _firebase_profile.age = value;
+              // _firebase_profile.age = value;
                 updated_value = value;
                 break;
               case "grade":
-                // _firebase_profile.grade = value;
+              // _firebase_profile.grade = value;
                 updated_value = value;
                 break;
             }

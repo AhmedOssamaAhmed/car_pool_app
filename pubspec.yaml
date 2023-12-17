@@ -39,6 +39,9 @@ dependencies:
   firebase_core:
   fluttertoast: any
   shared_preferences: any
+  sqflite: any
+  connectivity: any
+
 
 
   # The following adds the Cupertino Icons font to your application.
