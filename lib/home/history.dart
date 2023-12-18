@@ -23,6 +23,7 @@ class _historyState extends State<history> {
         leading: IconButton(
           icon: Icon(Icons.logout),
           onPressed: () {
+            removeToken();
             navigateAndFinish(context, Login());
           },
         ),

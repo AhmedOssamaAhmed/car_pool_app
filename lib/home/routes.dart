@@ -37,6 +37,7 @@ class _routesState extends State<routes> {
         leading: IconButton(
           icon: Icon(Icons.logout),
           onPressed: () {
+            removeToken();
             navigateAndFinish(context, Login());
           },
         ),
