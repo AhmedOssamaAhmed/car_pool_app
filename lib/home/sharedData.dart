@@ -85,12 +85,22 @@ class sharedData {
           ride_timing = ride_timing.subtract(Duration(hours: 9,minutes: 31));
           print("ride timing is ${ride_timing}");
           if(current_time.isAfter(ride_timing)){
+            for(var request in my_requests){
+              if(request['id'] == ride['id']){
+                updateRequest(request['id'], {'status':'finished'});
+              }
+            }
             updateRide(ride['id'], {'status':'finished'});
           }
         }
         if(ride['time'] == '17:30'){
           ride_timing = ride_timing.subtract(Duration(hours: 4,minutes: 30));
           if(current_time.isAfter(ride_timing)){
+            for(var request in my_requests){
+              if(request['id'] == ride['id']){
+                updateRequest(request['id'], {'status':'finished'});
+              }
+            }
             updateRide(ride['id'], {'status':'finished'});
           }
         }
@@ -154,6 +164,25 @@ class sharedData {
         showToast(text: "status updated", error: false);
       } else {
         print('No document found with id $rideId.');
+        showToast(text: "request not found", error: true);
+      }
+    } catch (e) {
+      print('Error updating document: $e');
+      showToast(text: "Failed to update status", error: true);
+    }
+  }
+  Future<void> updateRequest(int requestId, Map<String, dynamic> updatedData) async {
+    try {
+      CollectionReference requestsCollection = FirebaseFirestore.instance.collection('requests');
+      QuerySnapshot querySnapshot = await requestsCollection.where('id', isEqualTo: requestId).get();
+      if (querySnapshot.docs.isNotEmpty) {
+        DocumentReference documentReference = requestsCollection.doc(querySnapshot.docs.first.id);
+        await documentReference.update(updatedData);
+
+        print('Document with id $requestId updated successfully.');
+        showToast(text: "status updated", error: false);
+      } else {
+        print('No document found with id $requestId.');
         showToast(text: "request not found", error: true);
       }
     } catch (e) {
