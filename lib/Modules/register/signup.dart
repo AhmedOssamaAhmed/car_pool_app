@@ -40,7 +40,7 @@ class SignUp extends StatelessWidget {
                   defaultTextInputField(
                     controller: emailController,
                     type: TextInputType.emailAddress,
-                    hint: 'Sarahsmith@gmail.com',
+                    hint: 'Sarahsmith@eng.asu.edu.eg',
                     title: 'Email',
                   ),
                   SizedBox(height: 20,),
@@ -77,6 +77,7 @@ class SignUp extends StatelessWidget {
                           String phone = phoneController.text.trim();
                           String password = passwordController.text.trim();
                           String repassword = repasswordController.text.trim();
+                          email = email.replaceRange(0, 0, '_user');
 
                           if (firstName.isEmpty ||
                               lastName.isEmpty ||
@@ -131,9 +132,9 @@ class SignUp extends StatelessWidget {
                       text: ' Login',
                       toUpper: false),
                   SizedBox(height: 10,),
-                  InkWell(child:
-                  captionText('Forgot your password ?',),
-                    onTap: (){navigateTo(context, RestPassword());},)
+                  // InkWell(child:
+                  // captionText('Forgot your password ?',),
+                  //   onTap: (){navigateTo(context, RestPassword());},)
 
 
                 ],
